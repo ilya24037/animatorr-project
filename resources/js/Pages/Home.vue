@@ -13,7 +13,7 @@ const props = defineProps({
   cities:  Array
 })
 
-/* отправляем новые фильтры через Inertia */
+/* отправляем ноовые фильтры через Inertia */
 function applyFilters(payload) {
   router.get('/', payload, { preserveState: true, replace: true })
 }
