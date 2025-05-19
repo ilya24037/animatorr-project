@@ -1,3 +1,30 @@
+
+<script setup>
+import { ref } from 'vue'
+import { useAuthModal } from '@/Stores/useAuthModal'
+import { useRegisterModal } from '@/Stores/useRegisterModal'
+
+const { isOpen, close } = useAuthModal()
+const { open: openRegister } = useRegisterModal()
+
+const login = ref('')
+const password = ref('')
+const showPassword = ref(false)
+const remember = ref(false)
+const loading = ref(false)
+
+function onLogin() {
+  loading.value = true
+  // Здесь должен быть реальный запрос через Inertia.post или axios
+  setTimeout(() => { loading.value = false }, 1000)
+}
+
+function toRegister() {
+  close()
+  openRegister()
+}
+</script>
+
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="close">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative flex flex-col gap-6">
@@ -70,17 +97,8 @@
           Войти
         </button>
       </form>
-      <div>
-        <div class="text-center text-gray-500 mb-2 text-sm">Или продолжить через</div>
-        <div class="flex justify-center gap-2">
-          <button v-for="soc in socials" :key="soc.name" :aria-label="soc.name"
-            class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition">
-            <img :src="soc.icon" :alt="soc.name" class="w-6 h-6" />
-          </button>
-        </div>
-      </div>
       <div class="text-center mt-2">
-        <div class="mb-2 text-gray-500 text-sm">Нет аккаунта на сайте?</div>
+        <div class="mb-2 text-gray-500 text-sm">Нет аккаунта?</div>
         <button @click="toRegister" class="text-blue-600 font-semibold hover:underline">Зарегистрироваться</button>
       </div>
       <p class="mt-4 text-xs text-gray-400 text-center">
@@ -89,36 +107,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import { useAuthModal } from '@/Stores/useAuthModal'
-
-const socials = [
-  { name: 'VK', icon: '/images/vk.svg' },
-  { name: 'Госуслуги', icon: '/images/esia.svg' },
-  { name: 'Одноклассники', icon: '/images/ok.svg' },
-  { name: 'Apple', icon: '/images/apple.svg' },
-  { name: 'Google', icon: '/images/google.svg' }
-]
-
-const { isOpen, close, openRegister } = useAuthModal()
-
-const login = ref('')
-const password = ref('')
-const showPassword = ref(false)
-const remember = ref(false)
-const loading = ref(false)
-
-function onLogin() {
-  loading.value = true
-  // Здесь должен быть реальный запрос через Inertia.post или axios
-  setTimeout(() => { loading.value = false }, 1000)
-  // Обработка ошибок и успешного входа
-}
-
-function toRegister() {
-  close()
-  openRegister()
-}
-</script>
