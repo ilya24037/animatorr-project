@@ -1,13 +1,8 @@
 import { ref } from 'vue'
-
-const visible = ref(false)
+const isOpen = ref(false)
 
 export function useAuthModal() {
-  function show() {
-    visible.value = true
-  }
-  function hide() {
-    visible.value = false
-  }
-  return { visible, show, hide }
+  function open() { isOpen.value = true }
+  function close() { isOpen.value = false }
+  return { isOpen, open, close }
 }
