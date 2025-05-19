@@ -1,37 +1,124 @@
-<script setup>
-// ✅ AuthModal.vue с поддержкой v-model:show
-const props = defineProps({
-  show: Boolean
-})
-
-const emit = defineEmits(['update:show'])
-
-function close() {
-  emit('update:show', false)
-}
-</script>
-
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="close">
-    <div class="w-full max-w-md bg-white rounded-lg p-6 relative shadow-lg" role="dialog" aria-modal="true">
-      <!-- Кнопка закрытия -->
-      <button class="absolute top-3 right-3 text-gray-600 hover:text-gray-900" @click="close">✕</button>
-
-      <!-- Заголовок -->
-      <h2 class="text-2xl font-semibold mb-4">Вход</h2>
-
-      <!-- Пример формы -->
-      <form class="space-y-4" @submit.prevent="alert('Войти!')">
-        <div>
-          <label class="block text-sm font-medium">Email</label>
-          <input type="email" class="w-full border rounded p-2" />
+  <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40" @click.self="close">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative flex flex-col gap-6">
+      <button @click="close" class="absolute right-4 top-4 text-gray-400 hover:text-gray-600">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <h2 class="text-2xl font-bold mb-2">Вход</h2>
+      <form @submit.prevent="onLogin" class="flex flex-col gap-4">
+        <div class="relative">
+          <input
+            v-model="login"
+            type="text"
+            autocomplete="username"
+            placeholder="Телефон или почта"
+            class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <button
+            v-if="login"
+            type="button"
+            @click="login=''"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            tabindex="-1"
+          >
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <div>
-          <label class="block text-sm font-medium">Пароль</label>
-          <input type="password" class="w-full border rounded p-2" />
+        <div class="relative">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            v-model="password"
+            autocomplete="current-password"
+            placeholder="Пароль"
+            class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+          <button
+            type="button"
+            @click="showPassword = !showPassword"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            tabindex="-1"
+          >
+            <svg v-if="!showPassword" width="20" height="20" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-width="2" d="M1 12S5 5 12 5s11 7 11 7-4 7-11 7S1 12 1 12Z" />
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <svg v-else width="20" height="20" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-width="2" d="M1 1l22 22M17.94 17.94C16.01 19.3 14.09 20 12 20c-7 0-11-8-11-8 1.09-2.09 2.97-4.51 5.47-6.56M22.29 22.29c-.46-.5-.97-.98-1.5-1.42M12 12v0" />
+            </svg>
+          </button>
         </div>
-        <button type="submit" class="w-full bg-blue-600 text-white rounded py-2">Войти</button>
+        <div class="flex items-center justify-between text-sm">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input v-model="remember" type="checkbox" class="form-checkbox accent-blue-600" />
+            <span>Запомнить пароль</span>
+          </label>
+          <a href="#" class="text-blue-600 hover:underline">Забыли пароль?</a>
+        </div>
+        <button
+          type="submit"
+          :disabled="loading"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-5 py-3 transition disabled:opacity-50"
+        >
+          Войти
+        </button>
       </form>
+      <div>
+        <div class="text-center text-gray-500 mb-2 text-sm">Или продолжить через</div>
+        <div class="flex justify-center gap-2">
+          <button v-for="soc in socials" :key="soc.name" :aria-label="soc.name"
+            class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full hover:bg-gray-200 transition">
+            <img :src="soc.icon" :alt="soc.name" class="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+      <div class="text-center mt-2">
+        <div class="mb-2 text-gray-500 text-sm">Нет аккаунта на сайте?</div>
+        <button @click="toRegister" class="text-blue-600 font-semibold hover:underline">Зарегистрироваться</button>
+      </div>
+      <p class="mt-4 text-xs text-gray-400 text-center">
+        При регистрации и входе вы соглашаетесь с <a href="#" class="underline">условиями использования</a> и <a href="#" class="underline">политикой конфиденциальности</a>.
+      </p>
     </div>
   </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import { useAuthModal } from '@/Stores/useAuthModal'
+
+const socials = [
+  { name: 'VK', icon: '/images/vk.svg' },
+  { name: 'Госуслуги', icon: '/images/esia.svg' },
+  { name: 'Одноклассники', icon: '/images/ok.svg' },
+  { name: 'Apple', icon: '/images/apple.svg' },
+  { name: 'Google', icon: '/images/google.svg' }
+]
+
+const { isOpen, close, openRegister } = useAuthModal()
+
+const login = ref('')
+const password = ref('')
+const showPassword = ref(false)
+const remember = ref(false)
+const loading = ref(false)
+
+function onLogin() {
+  loading.value = true
+  // Здесь должен быть реальный запрос через Inertia.post или axios
+  setTimeout(() => { loading.value = false }, 1000)
+  // Обработка ошибок и успешного входа
+}
+
+function toRegister() {
+  close()
+  openRegister()
+}
+</script>
