@@ -1,1 +1,0 @@
-import{_ as s,a as r}from"./Cards-u8hxQb6W.js";import{c,o as t,i as o}from"./app-B98cum_x.js";import"./useLocationStore-D2sA4w3i.js";import"./_plugin-vue_export-helper-DlAUqK2U.js";const e={class:"py-6"},d=Object.assign({layout:s},{__name:"Catalog",props:{cards:Array},setup(a){return(_,n)=>(t(),c("div",e,[o(r,{cards:a.cards},null,8,["cards"])]))}});export{d as default};
