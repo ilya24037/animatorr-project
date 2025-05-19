@@ -1,32 +1,38 @@
-<template>
-  <div class="min-h-screen flex flex-col bg-[#f5f7fa] text-gray-800">
-    
-<Container>
-
-
-      
-<!-- Белая шапка с закруглением снизу -->
-      <div class="sticky top-0 z-50 bg-white shadow rounded-b-2xl">
-        
-<Navbar />
-      </div>
-      
-<!-- Белый фон контента, совпадает по ширине с шапкой -->
-      <main class="pt-6 pb-8">
-        <slot />
-      </main>
-      <footer class="bg-gray-200 py-6 text-sm text-gray-600 text-center rounded-t-xl mt-12">
-        © {{ new Date().getFullYear() }} Animatorr — Все права защищены
-      </footer>
-    </Container>
-  </div>
-  <AuthModal />
-</template>
-
 <script setup>
+import { ref } from 'vue'
+import { Head, Link } from '@inertiajs/vue3'
 import AuthModal from '@/Components/Modals/AuthModal.vue'
 import { useAuthModal } from '@/Stores/useAuthModal'
 
-import Navbar from '@/Components/Navbar.vue'
-import Container from '@/Components/Container.vue'
+// Пример использования хука для открытия модального окна
+const { open } = useAuthModal()
 </script>
+
+<template>
+  <div class="min-h-screen bg-gray-100">
+    <!-- Шапка сайта -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+        <h1 class="text-3xl font-bold text-gray-900">Animatorr</h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li>
+              <Link href="/" class="text-gray-500 hover:text-gray-700">Главная</Link>
+            </li>
+            <li>
+              <button @click="open" class="text-blue-600 hover:text-blue-800">Войти</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Модальное окно авторизации -->
+    <AuthModal />
+  </div>
+</template>
