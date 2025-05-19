@@ -1,126 +1,42 @@
-<script setup>
-import { ref, watch } from 'vue'
-import { router } from '@inertiajs/vue3'
-import axios from 'axios'
-
-const show = defineModel('show', { type: Boolean, default: false })
-
-const step = ref('email')       // 'email' | 'login' | 'register'
-const exists = ref(null)
-
-const email = ref('')
-const password = ref('')
-const password_confirmation = ref('')
-const name = ref('')
-
-const busy = ref(false)
-const errors = ref({ email: null, password: null, name: null })
-
-watch(show, (v) => {
-  if (v) {
-    step.value = 'email'
-    exists.value = null
-    email.value = ''
-    password.value = ''
-    password_confirmation.value = ''
-    name.value = ''
-    errors.value = { email: null, password: null, name: null }
-  }
-})
-
-async function submitEmail() {
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
-    errors.value.email = 'Введите корректный e-mail'
-    return
-  }
-
-  busy.value = true
-  errors.value.email = null
-
-  try {
-    const { data } = await axios.post('/auth/check-email', { email: email.value }, {
-      headers: { Accept: 'application/json' }
-    })
-    exists.value = data.exists
-    step.value = data.exists ? 'login' : 'register'
-  } catch {
-    errors.value.email = 'Ошибка сервера. Попробуйте позже'
-  } finally {
-    busy.value = false
-  }
-}
-
-function login() {
-  busy.value = true
-  router.post('/auth/login',
-    { email: email.value, password: password.value },
-    {
-      onError: err => {
-        errors.value.password = err.password ?? 'Неверный пароль'
-        busy.value = false
-      },
-      onSuccess: () => {
-        busy.value = false
-        show.value = false
-      }
-    })
-}
-
-function register() {
-  busy.value = true
-  router.post('/auth/register',
-    {
-      name: name.value,
-      email: email.value,
-      password: password.value,
-      password_confirmation: password_confirmation.value,
-    },
-    {
-      onError: err => {
-        errors.value = { ...errors.value, ...err }
-        busy.value = false
-      },
-      onSuccess: () => {
-        busy.value = false
-        show.value = false
-      }
-    })
-}
-</script>
-
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-    <div class="bg-white rounded-xl w-[420px] p-6 space-y-6 shadow">
-      <h2 class="text-xl font-semibold">
-        {{ step === 'email' ? 'Ваш e-mail' : step === 'login' ? 'Вход' : 'Регистрация' }}
-      </h2>
-
-      <!-- Шаг 1: Email -->
-      <form v-if="step === 'email'" @submit.prevent="submitEmail" class="space-y-4">
-        <input v-model="email" type="email" placeholder="you@mail.ru" class="w-full border rounded px-4 py-2" />
-        <div v-if="errors.email" class="text-red-500 text-sm">{{ errors.email }}</div>
-        <button :disabled="busy" class="w-full bg-blue-600 text-white rounded py-2">Дальше</button>
-      </form>
-
-      <!-- Шаг 2: Вход -->
-      <form v-else-if="step === 'login'" @submit.prevent="login" class="space-y-4">
-        <input v-model="password" type="password" placeholder="Пароль" class="w-full border rounded px-4 py-2" />
-        <div v-if="errors.password" class="text-red-500 text-sm">{{ errors.password }}</div>
-        <button :disabled="busy" class="w-full bg-blue-600 text-white rounded py-2">Войти</button>
-      </form>
-
-      <!-- Шаг 3: Регистрация -->
-      <form v-else @submit.prevent="register" class="space-y-4">
-        <input v-model="name" placeholder="Имя" class="w-full border rounded px-4 py-2" />
-        <div v-if="errors.name" class="text-red-500 text-sm">{{ errors.name }}</div>
-
-        <input v-model="password" type="password" placeholder="Пароль" class="w-full border rounded px-4 py-2" />
-        <div v-if="errors.password" class="text-red-500 text-sm">{{ errors.password }}</div>
-
-        <input v-model="password_confirmation" type="password" placeholder="Повторите пароль" class="w-full border rounded px-4 py-2" />
-
-        <button :disabled="busy" class="w-full bg-green-600 text-white rounded py-2">Зарегистрироваться</button>
+  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="close">
+    <div class="w-full max-w-md bg-white rounded-lg p-6 relative shadow-lg" role="dialog" aria-modal="true" aria-labelledby="modalLoginTitle">
+      <button class="absolute top-3 right-3 text-gray-600 hover:text-gray-900" aria-label="Закрыть окно" @click="close">✕</button>
+      <h2 id="modalLoginTitle" class="text-2xl font-semibold mb-4">Вход</h2>
+      <form @submit.prevent="submit" class="space-y-4">
+        <div>
+          <label class="block mb-1 text-gray-700">Email или телефон</label>
+          <div class="relative">
+            <input v-model="form.login" type="text" placeholder="you@email.com" class="w-full border rounded p-2 pr-8" autocomplete="username" />
+            <button v-if="form.login" type="button" class="absolute right-2 top-2 text-gray-400 hover:text-gray-600" @click="form.login = ''">×</button>
+          </div>
+          <span v-if="form.errors.login" class="text-red-600 text-sm">{{ form.errors.login }}</span>
+        </div>
+        <div>
+          <label class="block mb-1 text-gray-700">Пароль</label>
+          <input v-model="form.password" type="password" class="w-full border rounded p-2" autocomplete="current-password" />
+          <span v-if="form.errors.password" class="text-red-600 text-sm">{{ form.errors.password }}</span>
+        </div>
+        <button type="submit" class="w-full bg-blue-600 text-white rounded py-2">Войти</button>
       </form>
     </div>
   </div>
 </template>
+
+<script setup>
+import { useForm } from '@inertiajs/vue3'
+import { useAuthModal } from '@/Stores/useAuthModal'
+
+const { visible: show, hide: close } = useAuthModal()
+
+const form = useForm({
+  login: '',
+  password: '',
+})
+
+function submit() {
+  form.post(route('login'), {
+    onSuccess: () => close(),
+  })
+}
+</script>

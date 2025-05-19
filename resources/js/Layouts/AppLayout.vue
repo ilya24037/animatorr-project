@@ -20,9 +20,13 @@
       </footer>
     </Container>
   </div>
+  <AuthModal />
 </template>
 
 <script setup>
+import AuthModal from '@/Components/Modals/AuthModal.vue'
+import { useAuthModal } from '@/Stores/useAuthModal'
+
 import Navbar from '@/Components/Navbar.vue'
 import Container from '@/Components/Container.vue'
 </script>
