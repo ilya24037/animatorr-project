@@ -12695,3 +12695,24 @@
 #11 C:\\animatorr-project\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #12 {main}
 "} 
+[2025-05-20 13:55:03] local.ERROR: Command "tail" is not defined.
+
+Did you mean one of these?
+    pail
+    sail:add
+    sail:install
+    sail:publish {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"tail\" is not defined.
+
+Did you mean one of these?
+    pail
+    sail:add
+    sail:install
+    sail:publish at C:\\animatorr-project\\vendor\\symfony\\console\\Application.php:726)
+[stacktrace]
+#0 C:\\animatorr-project\\vendor\\symfony\\console\\Application.php(284): Symfony\\Component\\Console\\Application->find('tail')
+#1 C:\\animatorr-project\\vendor\\symfony\\console\\Application.php(193): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\animatorr-project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(197): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\animatorr-project\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Application.php(1234): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 C:\\animatorr-project\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
+#5 {main}
+"} 
