@@ -1,1 +1,1 @@
-a:3:{s:6:"_token";s:40:"wP8oRUVD1i5dFZ9QXKP4wZX0qyZjAsrozcZDFcOG";s:9:"_previous";a:1:{s:3:"url";s:70:"http://127.0.0.1:8000/.well-known/appspecific/com.chrome.devtools.json";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}}
+a:3:{s:6:"_token";s:40:"wP8oRUVD1i5dFZ9QXKP4wZX0qyZjAsrozcZDFcOG";s:9:"_previous";a:1:{s:3:"url";s:88:"http://127.0.0.1:8000/?is_online=true&is_verified=true&max_price=30000&min_price=0&type=";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}}

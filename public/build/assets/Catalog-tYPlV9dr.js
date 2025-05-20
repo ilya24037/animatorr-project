@@ -1,0 +1,1 @@
+import{_ as s,a as c}from"./Cards-DM7_v3Kz.js";import{c as r,o as t,j as e}from"./app-D3cTAmdR.js";import"./_plugin-vue_export-helper-DlAUqK2U.js";const o={class:"py-6"},p=Object.assign({layout:s},{__name:"Catalog",props:{cards:Array},setup(a){return(_,n)=>(t(),r("div",o,[e(c,{cards:a.cards},null,8,["cards"])]))}});export{p as default};

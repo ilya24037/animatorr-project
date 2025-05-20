@@ -1,0 +1,1 @@
+import{g as e}from"./app-D3cTAmdR.js";const s=e("location",{state:()=>({city:localStorage.getItem("selectedCity")||"Москва"}),actions:{setCity(t){this.city=t,localStorage.setItem("selectedCity",t)}}});export{s as u};

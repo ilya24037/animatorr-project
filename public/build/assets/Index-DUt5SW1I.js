@@ -1,0 +1,1 @@
+import{c as a,o,a as s,t as r}from"./app-D3cTAmdR.js";const n={class:"p-4"},c={class:"bg-gray-100 p-2 rounded"},p={__name:"Index",props:{animators:Object,filters:Object},setup(e){return(l,t)=>(o(),a("div",n,[t[0]||(t[0]=s("h1",{class:"text-2xl font-bold mb-4"},"Каталог аниматоров",-1)),s("pre",c,r(e.animators),1)]))}};export{p as default};

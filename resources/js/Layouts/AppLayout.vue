@@ -1,15 +1,13 @@
-
 <script setup>
+import Navbar from '@/Components/Navbar.vue'
 import AuthModal from '@/Components/Modals/AuthModal.vue'
 import RegisterModal from '@/Components/Modals/RegisterModal.vue'
 </script>
 
 <template>
   <div>
-    <!-- Основное содержимое сайта, например шапка и <slot /> -->
+    <Navbar />
     <slot />
-
-    <!-- Модальные окна авторизации и регистрации -->
     <AuthModal />
     <RegisterModal />
   </div>

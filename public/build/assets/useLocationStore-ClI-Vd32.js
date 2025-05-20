@@ -1,1 +1,0 @@
-import{I as e}from"./app-Bdh5Geea.js";const s=e("location",{state:()=>({city:localStorage.getItem("selectedCity")||"Москва"}),actions:{setCity(t){this.city=t,localStorage.setItem("selectedCity",t)}}});export{s as u};
