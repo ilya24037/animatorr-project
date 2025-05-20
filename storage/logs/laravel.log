@@ -12716,3 +12716,31 @@ Did you mean one of these?
 #4 C:\\animatorr-project\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #5 {main}
 "} 
+[2025-05-20 14:28:44] local.DEBUG: SQL {"sql":"select count(*) as aggregate from `animators`","bindings":[],"time_ms":3.06} 
+[2025-05-20 14:28:44] local.DEBUG: SQL {"sql":"select distinct `city` from `animators`","bindings":[],"time_ms":0.44} 
+[2025-05-20 14:28:47] local.DEBUG: SQL {"sql":"select count(*) as aggregate from `animators`","bindings":[],"time_ms":2.34} 
+[2025-05-20 14:28:47] local.DEBUG: SQL {"sql":"select distinct `city` from `animators`","bindings":[],"time_ms":0.73} 
+[2025-05-20 14:29:52] local.DEBUG: SQL {"sql":"select count(*) as aggregate from `animators`","bindings":[],"time_ms":12.51} 
+[2025-05-20 14:29:52] local.DEBUG: SQL {"sql":"select distinct `city` from `animators`","bindings":[],"time_ms":0.5} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":16.45} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"delete from `cache` where `key` in (?, ?) and `expiration` <= ?","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba","sait_animatory_cache_illuminate:cache:flexible:created:5c785c036466adea360111aa28563bfd556b5fba",1747751503],"time_ms":5.46} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba:timer"],"time_ms":0.46} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"delete from `cache` where `key` in (?, ?) and `expiration` <= ?","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba:timer","sait_animatory_cache_illuminate:cache:flexible:created:5c785c036466adea360111aa28563bfd556b5fba:timer",1747751503],"time_ms":7.17} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"insert ignore into `cache` (`key`, `value`, `expiration`) values (?, ?, ?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba:timer","i:1747751563;",1747751563],"time_ms":8.17} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":1.24} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"insert ignore into `cache` (`key`, `value`, `expiration`) values (?, ?, ?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba","i:0;",1747751563],"time_ms":8.49} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` = ? limit 1 for update","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":2.43} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"update `cache` set `value` = ? where `key` = ?","bindings":["i:1;","sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":32.15} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1"],"time_ms":0.46} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"delete from `cache` where `key` in (?, ?) and `expiration` <= ?","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1","sait_animatory_cache_illuminate:cache:flexible:created:sveta@mail.ru|127.0.0.1",1747751503],"time_ms":6.17} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `users` where `email` = ? limit 1","bindings":["sveta@mail.ru"],"time_ms":0.6} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1:timer"],"time_ms":0.47} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"delete from `cache` where `key` in (?, ?) and `expiration` <= ?","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1:timer","sait_animatory_cache_illuminate:cache:flexible:created:sveta@mail.ru|127.0.0.1:timer",1747751503],"time_ms":5.99} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"insert ignore into `cache` (`key`, `value`, `expiration`) values (?, ?, ?)","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1:timer","i:1747751563;",1747751563],"time_ms":5.76} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1"],"time_ms":0.33} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"insert ignore into `cache` (`key`, `value`, `expiration`) values (?, ?, ?)","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1","i:0;",1747751563],"time_ms":5.56} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` = ? limit 1 for update","bindings":["sait_animatory_cache_sveta@mail.ru|127.0.0.1"],"time_ms":0.53} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"update `cache` set `value` = ? where `key` = ?","bindings":["i:1;","sait_animatory_cache_sveta@mail.ru|127.0.0.1"],"time_ms":0.52} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":0.46} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select count(*) as aggregate from `animators`","bindings":[],"time_ms":2.01} 
+[2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select distinct `city` from `animators`","bindings":[],"time_ms":0.37} 
