@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { useAuthModal } from '@/Stores/useAuthModal'
 import { useRegisterModal } from '@/Stores/useRegisterModal'
@@ -15,8 +15,29 @@ const form = useForm({
   remember: false,
 })
 
+// При открытии модалки — подставить email из localStorage, если есть
+onMounted(() => {
+  const savedEmail = localStorage.getItem('remembered_email')
+  if (savedEmail) {
+    form.email = savedEmail
+    form.remember = true
+  }
+})
+
+// Сохраняем email в localStorage если чекбокс "Запомнить меня" отмечен
+watch(
+  () => [form.email, form.remember],
+  ([email, remember]) => {
+    if (remember && email) {
+      localStorage.setItem('remembered_email', email)
+    } else if (!remember) {
+      localStorage.removeItem('remembered_email')
+    }
+  }
+)
+
 function onLogin() {
-  form.post('/auth/login', {  // ВАЖНО: путь /auth/login
+  form.post('/auth/login', {
     onSuccess: () => {
       close()
       form.reset('password')
