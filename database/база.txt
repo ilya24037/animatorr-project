@@ -1,0 +1,240 @@
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА users
+-------------------------------------------------------------------------------
+CREATE TABLE "users" (
+    "id" integer primary key autoincrement not null,
+    "name" varchar not null,
+    "email" varchar not null,
+    "email_verified_at" datetime,
+    "password" varchar not null,
+    "remember_token" varchar,
+    "created_at" datetime,
+    "updated_at" datetime,
+    -- Если у вас была расширенная версия:
+    -- "is_verified" tinyint(1) not null default '0',
+    -- "role" varchar not null default 'user'
+);
+
+CREATE UNIQUE INDEX "users_email_unique" ON "users" ("email");
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА cards
+-------------------------------------------------------------------------------
+CREATE TABLE "cards" (
+    "id" integer primary key autoincrement not null,
+    "title" varchar not null,
+    "image" varchar,
+    "price" integer not null,
+    "city" varchar,
+    "type" varchar CHECK ("type" IN ('private', 'agency')) NOT NULL DEFAULT 'private',
+    "created_at" datetime,
+    "updated_at" datetime
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА failed_jobs
+-------------------------------------------------------------------------------
+CREATE TABLE "failed_jobs" (
+    "id" integer primary key autoincrement not null,
+    "uuid" varchar not null,
+    "connection" text not null,
+    "queue" text not null,
+    "payload" text not null,
+    "exception" text not null,
+    "failed_at" datetime not null default CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX "failed_jobs_uuid_unique" ON "failed_jobs" ("uuid");
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА jobs
+-------------------------------------------------------------------------------
+CREATE TABLE "jobs" (
+    "id" integer primary key autoincrement not null,
+    "queue" varchar not null,
+    "payload" text not null,
+    "attempts" integer not null,
+    "reserved_at" integer,
+    "available_at" integer not null,
+    "created_at" integer not null
+);
+
+CREATE INDEX "jobs_queue_index" ON "jobs" ("queue");
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА job_batches
+-------------------------------------------------------------------------------
+CREATE TABLE "job_batches" (
+    "id" varchar not null,
+    "name" varchar not null,
+    "total_jobs" integer not null,
+    "pending_jobs" integer not null,
+    "failed_jobs" integer not null,
+    "failed_job_ids" text not null,
+    "options" text,
+    "cancelled_at" integer,
+    "created_at" integer not null,
+    "finished_at" integer,
+    PRIMARY KEY ("id")
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦЫ кеша: cache, cache_locks
+-------------------------------------------------------------------------------
+CREATE TABLE "cache" (
+    "key" varchar not null,
+    "value" text not null,
+    "expiration" integer not null,
+    PRIMARY KEY ("key")
+);
+
+CREATE TABLE "cache_locks" (
+    "key" varchar not null,
+    "owner" varchar not null,
+    "expiration" integer not null,
+    PRIMARY KEY ("key")
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА sessions
+-------------------------------------------------------------------------------
+CREATE TABLE "sessions" (
+    "id" varchar not null,
+    "user_id" integer,
+    "ip_address" varchar,
+    "user_agent" text,
+    "payload" text not null,
+    "last_activity" integer not null,
+    PRIMARY KEY ("id")
+);
+
+CREATE INDEX "sessions_last_activity_index" ON "sessions" ("last_activity");
+CREATE INDEX "sessions_user_id_index"      ON "sessions" ("user_id");
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА password_reset_tokens
+-------------------------------------------------------------------------------
+CREATE TABLE "password_reset_tokens" (
+    "email" varchar not null,
+    "token" varchar not null,
+    "created_at" datetime,
+    PRIMARY KEY ("email")
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА animators
+-------------------------------------------------------------------------------
+CREATE TABLE "animators" (
+    "id" integer primary key autoincrement not null,
+    "user_id" integer not null,
+    "name" varchar not null,
+    "age" integer not null,
+    "height" integer not null,
+    "weight" numeric,
+    "city" varchar not null,
+    "about" text,
+    "price" numeric,
+    "rating" integer not null default '5',
+    "reviews_count" integer not null default '0',
+    "photo_folder" varchar,
+    "slug" varchar not null,
+    "is_online" tinyint(1) not null default '0',
+    "is_verified" tinyint(1) not null default '0',
+    "type" varchar check ("type" in ('solo', 'team')) not null default 'solo',
+    "created_at" datetime,
+    "updated_at" datetime,
+    "bumped_at" datetime,
+    "highlight_until" datetime,
+    FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE
+);
+
+-- Пример индексов (если они были):
+-- CREATE INDEX "animators_type_index"          ON "animators" ("type");
+-- CREATE INDEX "animators_is_verified_index"   ON "animators" ("is_verified");
+-- CREATE INDEX "animators_is_online_index"     ON "animators" ("is_online");
+-- CREATE UNIQUE INDEX "animators_slug_unique"  ON "animators" ("slug");
+-- CREATE INDEX "animators_price_index"         ON "animators" ("price");
+-- CREATE INDEX "animators_city_index"          ON "animators" ("city");
+-- CREATE INDEX "animators_highlight_until_index" ON "animators" ("highlight_until");
+-- CREATE INDEX "animators_bumped_at_index"     ON "animators" ("bumped_at");
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА categories / subcategories
+-------------------------------------------------------------------------------
+CREATE TABLE "categories" (
+    "id" integer primary key autoincrement not null,
+    "name" varchar not null,
+    "created_at" datetime,
+    "updated_at" datetime
+);
+
+CREATE TABLE "subcategories" (
+    "id" integer primary key autoincrement not null,
+    "category_id" integer not null,
+    "name" varchar not null,
+    "created_at" datetime,
+    "updated_at" datetime,
+    FOREIGN KEY("category_id") REFERENCES "categories"("id") ON DELETE CASCADE
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА services
+-------------------------------------------------------------------------------
+CREATE TABLE "services" (
+    "id" integer primary key autoincrement not null,
+    "name" varchar not null,
+    "price" integer not null,
+    "duration_days" integer not null,
+    "created_at" datetime,
+    "updated_at" datetime
+);
+
+-------------------------------------------------------------------------------
+-- ad_services (УДАЛЕНО, т.к. зависит от ads) 
+-- Изначально:
+-- CREATE TABLE "ad_services" (
+--     "id" integer primary key autoincrement not null,
+--     "ad_id" integer not null,
+--     "service_id" integer not null,
+--     "started_at" datetime,
+--     "expires_at" datetime,
+--     "created_at" datetime,
+--     "updated_at" datetime,
+--     FOREIGN KEY("ad_id") REFERENCES "ads"("id") ON DELETE CASCADE,
+--     FOREIGN KEY("service_id") REFERENCES "services"("id") ON DELETE CASCADE
+-- );
+--
+-- Убираем полностью, так как без ads она не имеет смысла.
+
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА payments (убрано поле ad_id и ссылка на ads)
+-------------------------------------------------------------------------------
+CREATE TABLE "payments" (
+    "id" integer primary key autoincrement not null,
+    "user_id" integer not null,
+    -- "ad_id" integer,      <-- убрано
+    "service_id" integer,    
+    "amount" integer not null,
+    "status" varchar not null default 'pending',
+    "payment_method" varchar,
+    "paid_at" datetime,
+    "created_at" datetime,
+    "updated_at" datetime,
+    FOREIGN KEY("user_id") REFERENCES "users"("id") ON DELETE CASCADE,
+    FOREIGN KEY("service_id") REFERENCES "services"("id") ON DELETE CASCADE
+);
+
+-------------------------------------------------------------------------------
+-- ТАБЛИЦА migrations
+-------------------------------------------------------------------------------
+CREATE TABLE "migrations" (
+    "id" integer primary key autoincrement not null,
+    "migration" varchar not null,
+    "batch" integer not null
+);
+
+-------------------------------------------------------------------------------
+-- Служебная таблица sqlite_sequence (для автоприращаемых id)
+-------------------------------------------------------------------------------
+CREATE TABLE sqlite_sequence(name, seq);
