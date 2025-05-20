@@ -12744,3 +12744,4 @@ Did you mean one of these?
 [2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select * from `cache` where `key` in (?)","bindings":["sait_animatory_cache_5c785c036466adea360111aa28563bfd556b5fba"],"time_ms":0.46} 
 [2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select count(*) as aggregate from `animators`","bindings":[],"time_ms":2.01} 
 [2025-05-20 14:31:43] local.DEBUG: SQL {"sql":"select distinct `city` from `animators`","bindings":[],"time_ms":0.37} 
+[2025-05-20 14:35:39] local.DEBUG: SQL {"sql":"insert into `users` (`name`, `email`, `email_verified_at`, `password`, `remember_token`, `updated_at`, `created_at`) values (?, ?, ?, ?, ?, ?, ?)","bindings":["Моисеев Ананий Владимирович","debug+721187577@test.com","2025-05-20 14:35:39","$2y$12$u.9SX5t/jSh/sUoxhzVbxu.x5zIL2KWxCXaBmUEiZffNrWYnE0e9K","eKxso7bWcW","2025-05-20 14:35:39","2025-05-20 14:35:39"],"time_ms":6.75} 
