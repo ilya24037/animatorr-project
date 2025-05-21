@@ -5,33 +5,32 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
     /**
-     * Handle the incoming registration request.
+     * Handle an incoming registration request.
      */
     public function __invoke(RegisterRequest $request): JsonResponse
     {
+        $data = $request->validated();
+
         $user = User::create([
-            'name'     => $request->string('name'),
-            'email'    => $request->string('email'),
-            'password' => Hash::make($request->string('password')),
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
         ]);
 
-        event(new Registered($user));
-
-        // Выдаём SPA‑токен (Laravel Sanctum)
-        $token = method_exists($user, 'createToken')
-            ? $user->createToken('spa')->plainTextToken
-            : null;
+        // Sanctum token
+        $token = $user->createToken('spa')->plainTextToken;
 
         return response()->json([
-            'data'  => ['user' => $user],
-            'token' => $token,
+            'data' => [
+                'user'  => $user,
+                'token' => $token,
+            ],
         ], 201);
     }
 }

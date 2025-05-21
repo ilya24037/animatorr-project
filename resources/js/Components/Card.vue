@@ -18,7 +18,7 @@
       <transition name="fade" mode="out-in">
         <img
           :key="images[currentImage]"
-          :src="images && images[currentImage] ? images[currentImage] : ''"
+          :src="images[currentImage] ?? '/images/no-photo.png'"
           class="w-full h-[260px] object-cover rounded transition-opacity duration-300"
           alt="Фото аниматора"
         />
@@ -72,7 +72,7 @@ import {
 } from 'lucide-vue-next'
 
 const props = defineProps({
-  images: Array,
+  images: { type: Array, default: () => [] },
   title: String,
   price: Number,
   age: Number,
@@ -87,8 +87,9 @@ function onMouseMove(event) {
   const el = event.currentTarget
   const width = el.offsetWidth
   const mouseX = event.offsetX
-  const imageCount = props.images.length
+  const imageCount = props.images.length || 0
 
+  if (imageCount === 0) return;
   const index = Math.floor((mouseX / width) * imageCount)
   currentImage.value = Math.min(index, imageCount - 1)
 }
@@ -106,3 +107,4 @@ function resetImage() {
   opacity: 0;
 }
 </style>
+

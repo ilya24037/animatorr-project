@@ -1,0 +1,2 @@
+Добавьте строку App\Providers\RouteServiceProvider::class, в массив 'providers' файла config/app.php
+над строкой 'Illuminate\Routing\RoutingServiceProvider::class,' или после последнего кастомного провайдера.

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, nextTick } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { useAuthModal } from '@/Stores/useAuthModal'
 import { useRegisterModal } from '@/Stores/useRegisterModal'
@@ -47,7 +47,7 @@ function onLogin() {
 
 function toRegister() {
   close()
-  openRegister()
+  setTimeout(() => openRegister(), 100)
 }
 </script>
 

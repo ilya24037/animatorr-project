@@ -1,92 +1,83 @@
 <script setup>
 import { ref } from 'vue'
-import { api } from '@/api'
+import { api } from '../../api'
 import { useRegisterModal } from '@/Stores/useRegisterModal'
+import { useAuthModal } from '@/Stores/useAuthModal'
 
+/* modal state from pinia-like composable */
 const { isOpen, close } = useRegisterModal()
+const { open: openAuth } = useAuthModal()
 
-const email       = ref('')
-const password    = ref('')
-const password2   = ref('')
-const name        = ref('')
-const error       = ref('')
-const loading     = ref(false)
-const registered  = ref(false)
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const password_confirmation = ref('')
+const error = ref(null)
+const loading = ref(false)
 
-/* --------------------------------------------------------------------------
- *  Реальная регистрация пользователя через REST API v1
- * ------------------------------------------------------------------------ */
-const handleSubmit = async () => {
-  error.value = ''
-  if (password.value !== password2.value) {
-    error.value = 'Пароли не совпадают'
-    return
-  }
-
+const submit = async () => {
   loading.value = true
-
+  error.value = null
   try {
     await api.post('/auth/register', {
-      name:                  name.value.trim(),
-      email:                 email.value.trim(),
-      password:              password.value,
-      password_confirmation: password2.value,
+      name: name.value.trim(),
+      email: email.value.trim(),
+      password: password.value,
+      password_confirmation: password_confirmation.value,
     })
-
-    /* если дошли до сюда — пользователь создан */
-    registered.value = true
-  } catch (err) {
-    if (err.response?.status === 422) {
-      // выводим первую ошибку валидации
-      const bag = err.response.data.errors
-      error.value = Object.values(bag)[0][0] ?? 'Ошибка валидации'
-    } else {
-      error.value = 'Не удалось зарегистрироваться. Попробуйте позже.'
-    }
+    // после успешной регистрации переходим к авторизации
+    close()
+    openAuth()
+  } catch (e) {
+    error.value = 'Не удалось зарегистрироваться.'
   } finally {
     loading.value = false
   }
 }
+
+const toLogin = () => {
+  close()
+  openAuth()
+}
 </script>
 
 <template>
-  <Teleport to="body">
-    <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div class="bg-white rounded-2xl p-8 w-full max-w-md shadow-xl relative">
-        <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" @click="close">✕</button>
+  <div
+    v-if="isOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+    @click.self="close"
+  >
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl relative">
+      <button
+        @click="close"
+        class="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+      >
+        ×
+      </button>
 
-        <h2 class="text-2xl font-semibold mb-6">Регистрация</h2>
+      <h2 class="mb-4 text-2xl font-bold text-center">Регистрация</h2>
 
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <input v-model="name"      class="input" placeholder="Имя"            required />
-          <input v-model="email"     class="input" type="email" placeholder="E‑mail" required />
-          <input v-model="password"  class="input" type="password" placeholder="Пароль" required minlength="8" />
-          <input v-model="password2" class="input" type="password" placeholder="Повторите пароль" required minlength="8" />
+      <div class="space-y-3">
+        <input v-model="name" placeholder="Имя" class="w-full border rounded p-3" />
+        <input v-model="email" placeholder="Email" class="w-full border rounded p-3" />
+        <input type="password" v-model="password" placeholder="Пароль" class="w-full border rounded p-3" />
+        <input type="password" v-model="password_confirmation" placeholder="Повторите пароль" class="w-full border rounded p-3" />
+      </div>
 
-          <button :disabled="loading" class="btn-primary w-full">
-            <span v-if="!loading">Зарегистрироваться</span>
-            <span v-else>…</span>
-          </button>
-        </form>
+      <button
+        :disabled="loading"
+        @click="submit"
+        class="mt-5 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold"
+      >
+        {{ loading ? 'Подождите…' : 'Зарегистрироваться' }}
+      </button>
 
-        <p v-if="error" class="text-sm text-red-600 mt-4">{{ error }}</p>
-        <p v-if="registered" class="text-sm text-green-600 mt-4">
-          Успех! Проверьте почту для подтверждения.
-        </p>
+      <p v-if="error" class="mt-3 text-sm text-red-500 text-center">{{ error }}</p>
 
-        <p class="text-xs text-gray-500 mt-6">
-          Регистрируясь, вы&nbsp;соглашаетесь с&nbsp;<a href="/privacy" class="underline">политикой&nbsp;обработки&nbsp;данных</a>.
-        </p>
+      <div class="text-center mt-4 text-sm">
+        Есть аккаунт?
+        <button @click="toLogin" class="text-blue-600 font-semibold hover:underline">Войти</button>
       </div>
     </div>
-  </Teleport>
+  </div>
 </template>
-
-<style scoped>
-.input {
-  @apply w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500;
-}
-.btn-primary {
-  @apply bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 font-semibold;
-}
-</style>
