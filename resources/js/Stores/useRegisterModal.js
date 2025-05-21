@@ -1,14 +1,23 @@
+import { ref, computed } from 'vue'
 
-import { ref } from 'vue'
-
+/* ──────────────── state ──────────────── */
 const isOpen = ref(false)
 
-export function open () { isOpen.value = true }
-export function close () { isOpen.value = false }
+/* ─────────────── actions ─────────────── */
+function open ()   { isOpen.value = true }
+function close ()  { isOpen.value = false }
+function toggle () { isOpen.value = !isOpen.value }
 
-// default export для импорта «import modal from '@/Stores/useRegisterModal'»
-export default {
-  isOpen,
-  open,
-  close,
+/* ──────────── composable ─────────────── */
+function useRegisterModal () {
+  return {
+    isOpen: computed(() => isOpen.value),
+    open,
+    close,
+    toggle,
+  }
 }
+
+/* ─────────────── exports ─────────────── */
+export { useRegisterModal }   // именованный экспорт
+export default useRegisterModal   // ← default — тоже функция
