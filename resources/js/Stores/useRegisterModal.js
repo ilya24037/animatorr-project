@@ -3,8 +3,12 @@ import { ref } from 'vue'
 
 const isOpen = ref(false)
 
-export function useRegisterModal() {
-  function open() { isOpen.value = true }
-  function close() { isOpen.value = false }
-  return { isOpen, open, close }
+export function open () { isOpen.value = true }
+export function close () { isOpen.value = false }
+
+// default export для импорта «import modal from '@/Stores/useRegisterModal'»
+export default {
+  isOpen,
+  open,
+  close,
 }
